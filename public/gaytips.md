@@ -55,6 +55,4 @@ you can do this one at any point in the instructions! just do it when youre re
 
 <hr />
 
-these tips were made by [Mangoksu](https://youtube.com/@Mangoksu)
-
-website by [tpguy825](https://tpguy825.cf)
+these tips were made by [Mangoksu](https://youtube.com/@Mangoksu) - website by [tpguy825](https://tpguy825.cf) - [source code](https://github.com/tpguy825/gaytips)
