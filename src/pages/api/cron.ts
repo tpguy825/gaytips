@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { sendErrorEmail } from "./errorEmail";
+import { sendErrorEmail } from "~/errorEmail";
 
 const sites: `https://${"" | `${string}.`}tpguy825.cf`[] = [
 	"https://www.tpguy825.cf",
@@ -10,7 +10,7 @@ const sites: `https://${"" | `${string}.`}tpguy825.cf`[] = [
 	"https://other.tpguy825.cf",
 	"https://gaytips.tpguy825.cf",
 	"https://old.tpguy825.cf",
-	"https://thisdoesnotexist.tpguy825.cf",
+	// "https://thisdoesnotexist.tpguy825.cf",  // for testing
 ];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
