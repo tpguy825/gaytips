@@ -1,9 +1,7 @@
-import { readFileSync } from "fs";
-import { createTransport } from "nodemailer";
-import { openpgpEncrypt } from "nodemailer-openpgp";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { sendErrorEmail, type SendErrorEmail } from "./errorEmail";
 
-const sites  = [
+const sites: `https://${"" | `${string}.`}tpguy825.cf`[] = [
 	"https://www.tpguy825.cf",
 	"https://tpguy825.cf",
 	"https://jsab.tpguy825.cf",
@@ -12,54 +10,55 @@ const sites  = [
 	"https://other.tpguy825.cf",
 	"https://gaytips.tpguy825.cf",
 	"https://old.tpguy825.cf",
-] satisfies (`https://${"" | `${string}.`}tpguy825.cf`)[]
+	"https://thisdoesnotexist.tpguy825.cf",
+];
 
-export default function handler(_req: NextApiRequest, _res: NextApiResponse) {
-	sites.forEach((url) => {
-		fetch(url).then((r) => {
-			if (!r.ok) {
-				sendErrorEmail(url, r, "main")
+let errorUrl: URL;
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+	Promise.all<Promise<boolean>[]>(
+		sites.map(async (url) => {
+			try {
+				const r = await fetch(url);
+				if (!r.ok) {
+					errorUrl = new URL("/api/errorEmail", `http://${req.headers.host || "gaytips.tpguy825.cf"}`)
+					await sendErrorEmail(url, {
+						status: r.status,
+						statusText: r.statusText,
+					}, "main");
+				}
+
+				return r.ok;
+			} catch (e) {
+				const error = e as Error;
+				await sendErrorEmail(
+					url,
+					{
+						message: "message" in error ? error.message : "Unknown error, check Vercel logs",
+					},
+					"error",
+				);
+				return false;
 			}
-		}).catch((e) => {
-			sendErrorEmail(url, e as Error, "error")
+		}),
+	)
+		.then(res.json)
+		.catch((e) => {
+			console.error(e);
+			res.status(500).json(e);
 		});
-	})
 }
 
-const mail = createTransport({
-	host: "smtp-relay.sendinblue.com",
-	port: 465,
-	secure: true, // use TLS
-	auth: {
-		user: process.env.SENDINBLUE_USER,
-		pass: process.env.SENDINBLUE_PASS,
-	},
-	tls: {
-		rejectUnauthorized: false,
-	},
-});
-
-mail.use("stream", openpgpEncrypt());
-
-export function sendErrorEmail(url: `https://${"" | `${string}.`}tpguy825.cf`, res: Response | Error, type: "main" | "error") {
-	void mail.sendMail(
-		{
-			from: process.env.SENDINBLUE_FROM,
-			to: process.env.SENDINBLUE_TO,
-			subject: "Error during cron job run for " + url,
-			text: [
-				"An error occurred during the cron job run for " + url,
-				"",
-				"Error: " + (res instanceof Error ? res.message : String(res.status) + " " + res.statusText),
-				"Type: " + type === "main" ? "Website issue" : "Error sending request",
-				"Datetime: " + new Date().toISOString(),
-			].join("\n"),
-			// @ts-expect-error this is for nodemailer-openpgp
-			encryptionKeys: [readFileSync("./key.asc", "utf-8")],
-			shouldSign: true,
-		},
-		(err, response) => {
-			console.error(err || response);
-		},
-	);
-}
+// const sendErrorEmail: SendErrorEmail<Response> = async (url, res, type) => {
+// 	return await fetch(errorUrl, {
+// 		method: "POST",
+// 		headers: {
+// 			"Content-Type": "application/json",
+// 		},
+// 		body: JSON.stringify({
+// 			url,
+// 			res,
+// 			type,
+// 		}),
+// 	});
+// };
