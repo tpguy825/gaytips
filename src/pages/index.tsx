@@ -16,15 +16,6 @@ export default function Home() {
 		return typeof value === "string";
 	}
 
-	function toId(str: string) {
-		return str
-			.split(" ")
-			.map((e) => {
-				return e.toLowerCase();
-			})
-			.join("-");
-	}
-
 	function createElement(
 		type: string | FunctionComponent | ComponentClass,
 		elementProps: JSX.IntrinsicAttributes,
