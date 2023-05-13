@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorEmail } from "~/errorEmail";
 
-const sites: `https://${"" | `${string}.`}tpguy825.cf`[] = [
+const sites: `http${"" | "s"}://${string}`[] = [
 	"https://www.tpguy825.cf",
 	"https://tpguy825.cf",
 	"https://jsab.tpguy825.cf",
@@ -10,6 +10,7 @@ const sites: `https://${"" | `${string}.`}tpguy825.cf`[] = [
 	"https://other.tpguy825.cf",
 	"https://gaytips.tpguy825.cf",
 	"https://old.tpguy825.cf",
+	"https://pmmpinstaller.cf"
 	// "https://thisdoesnotexist.tpguy825.cf",  // for testing
 ];
 
