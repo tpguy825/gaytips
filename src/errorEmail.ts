@@ -81,14 +81,14 @@ Time: ${new Date().toUTCString()}`,
 
 export interface SendErrorEmail<T> {
 	(
-		url: `https://${"" | `${string}.`}tpguy825.cf`,
+		url: `http${"" | "s"}://${string}`,
 		res: {
 			message: string;
 		},
 		type: "error",
 	): Promise<T>;
 	(
-		url: `https://${"" | `${string}.`}tpguy825.cf`,
+		url: `http${"" | "s"}://${string}`,
 		res: {
 			status: number;
 			statusText: string;
