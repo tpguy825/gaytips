@@ -10,7 +10,6 @@ const sites: `http${"" | "s"}://${string}`[] = [
 	"https://other.tpguy825.cf",
 	"https://gaytips.tpguy825.cf",
 	"https://old.tpguy825.cf",
-	"https://pmmpinstaller.cf"
 	// "https://thisdoesnotexist.tpguy825.cf",  // for testing
 ];
 
